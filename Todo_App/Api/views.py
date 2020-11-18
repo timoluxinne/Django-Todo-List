@@ -19,7 +19,7 @@ def apiOverview(request):
 
 @api_view(['GET'])
 def TaskList(request):
-    posts = Task.objects.all()
+    posts = Task.objects.all().order_by('-date_added')
     serializer = TaskSerializer(posts, many=True)
     return Response(serializer.data)
 
