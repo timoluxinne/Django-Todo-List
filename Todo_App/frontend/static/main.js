@@ -1,6 +1,3 @@
-// console.log('====================================');
-// console.log('Youh');
-// console.log('====================================');
 BuildList()
 function getCookie(name) {
     let cookieValue = null;
@@ -21,16 +18,12 @@ var activeItem = null;
 var list_snapshot = [];
 
 function BuildList(){
-    console.log('Youh');
     var wrapper = document.getElementById('list-wrapper')
-    // wrapper.innerHTML = '';
     var url = 'http://localhost:8000/api/task-list/'
-    var activeItem = null;
     
     fetch(url)
     .then(res => res.json())
     .then(data => {
-        // console.log('Data:',data)
         
         var list = data
         for(let i in list){
@@ -47,7 +40,6 @@ function BuildList(){
                 title = `<strike class='title text-black-50'>${list[i].title}</strike>`
             }
 
-            // console.log(i);
             var item = `
                 <div id="task-wrapper-${i}" class="container bg-light p-0 m-0">
                     <div class="d-flex justify-content-between border-bottom px-3 py-2">
@@ -161,6 +153,5 @@ function strokeUnstroke(item){
     })
     .then(data => {
         BuildList()
-        // location.reload()
     })
 }
