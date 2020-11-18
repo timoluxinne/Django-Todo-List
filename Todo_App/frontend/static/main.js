@@ -2,12 +2,29 @@
 // console.log('Youh');
 // console.log('====================================');
 BuildList()
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      var cookies = document.cookie.split(';');
+      for(let i=0; i< cookies.length; i++){
+        var cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+}
+var csrftoken = getCookie('csrftoken');
+var activeItem = null;
 
 function BuildList(){
     console.log('Youh');
     var wrapper = document.getElementById('list-wrapper')
     wrapper.innerHTML = '';
     var url = 'http://localhost:8000/api/task-list/'
+    var activeItem = null;
     
     fetch(url)
     .then(res => res.json())
@@ -24,13 +41,24 @@ function BuildList(){
                             <span>${list[i].title}</span>
                         </div>
                         <div>
-                            <button class="btn btn-outline-info">Edit</button>
+                            <button class="btn btn-outline-info edit">Edit</button>
                             <button class="btn btn-outline-danger">Del</button>
                         </div>
                     </div>
                 </div>
             `
             wrapper.innerHTML += item
+        }
+
+        for(let i=0; i< list.length; i++){
+            var editBtn = document.getElementsByClassName('edit')[i]
+
+
+            editBtn.addEventListener('click', function(item){
+                return function(){
+                    editItem(item)
+                };
+            }(list[i]));
         }
     })
 }
@@ -44,10 +72,15 @@ form.addEventListener('submit', function(e){
     var url = 'http://localhost:8000/api/task-create/'
     var title = document.getElementById('title').value
 
+    if(activeItem != null){
+        var url =  `http://localhost:8000/api/task-update/${activeItem.id}/`
+    }
+
     fetch(url, {
         method: 'POST',
         headers: {
             'Content-type': 'application/json',
+            'X-CSRFToken': csrftoken
         },
         body: JSON.stringify({'title':title})
     })
@@ -55,5 +88,12 @@ form.addEventListener('submit', function(e){
     .then(data => {
         console.log('Data:', data);
         BuildList()
+        document.getElementById('form').reset()
     })
 })
+
+function editItem(item){
+    console.log('Item:', item);
+    activeItem = item
+    document.getElementById('title').value = activeItem.title
+}
