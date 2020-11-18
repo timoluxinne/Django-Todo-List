@@ -17,11 +17,15 @@ function BuildList(){
         for(let i=0; i< list.length; i++){
             // console.log(i);
             var item = `
-                <div id='task-wrapper' class='d-flex justify-content-between'>
-                    <span>${list[i].title}</span>
-                    <div>
-                        <button class='btn btn-outline-info'>Edit</button>
-                        <button class='btn btn-outline-danger'>Del</button>
+                <div id="list-wrapper" class="container bg-light p-0 m-0">
+                    <div class="d-flex justify-content-between border-bottom px-3 py-2">
+                        <div class="pt-2">
+                            <span>${list[i].title}</span>
+                        </div>
+                        <div>
+                            <button class="btn btn-outline-info">Edit</button>
+                            <button class="btn btn-outline-danger">Del</button>
+                        </div>
                     </div>
                 </div>
             `
