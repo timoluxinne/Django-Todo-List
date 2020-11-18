@@ -36,3 +36,17 @@ def TaskCreate(request):
         serializer.save()
     return Response(serializer.data)
 
+@api_view(['POST'])
+def TaskUpdate(request, pk):
+    task = Task.objects.get(id=pk)
+    serializer = TaskSerializer(instance=task, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@api_view(['DELETE'])
+def TaskDelete(request, pk):
+    task = Task.objects.get(id=pk)
+    task.delete()
+    return Response()
+
