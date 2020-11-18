@@ -42,7 +42,7 @@ function BuildList(){
                         </div>
                         <div>
                             <button class="btn btn-outline-info edit">Edit</button>
-                            <button class="btn btn-outline-danger">Del</button>
+                            <button class="btn btn-outline-danger delete">Del</button>
                         </div>
                     </div>
                 </div>
@@ -52,11 +52,18 @@ function BuildList(){
 
         for(let i=0; i< list.length; i++){
             var editBtn = document.getElementsByClassName('edit')[i]
+            var deleteBtn = document.getElementsByClassName('delete')[i]
 
 
             editBtn.addEventListener('click', function(item){
                 return function(){
                     editItem(item)
+                };
+            }(list[i]));
+
+            deleteBtn.addEventListener('click', function(item){
+                return function(){
+                    deleteItem(item)
                 };
             }(list[i]));
         }
@@ -93,7 +100,22 @@ form.addEventListener('submit', function(e){
 })
 
 function editItem(item){
-    console.log('Item:', item);
     activeItem = item
     document.getElementById('title').value = activeItem.title
+}
+
+function deleteItem(item){
+    console.log('Item:', item);
+
+    fetch(`http://localhost:8000/api/task-delete/${item.id}/`, {
+        method: 'DELETE',
+        headers: {
+            'Content-type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify({'title': item.title})
+    })
+    .then(data => {
+        BuildList()
+    })
 }
