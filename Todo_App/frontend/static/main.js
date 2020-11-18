@@ -18,11 +18,12 @@ function getCookie(name) {
 }
 var csrftoken = getCookie('csrftoken');
 var activeItem = null;
+var list_snapshot = [];
 
 function BuildList(){
     console.log('Youh');
     var wrapper = document.getElementById('list-wrapper')
-    wrapper.innerHTML = '';
+    // wrapper.innerHTML = '';
     var url = 'http://localhost:8000/api/task-list/'
     var activeItem = null;
     
@@ -32,7 +33,14 @@ function BuildList(){
         // console.log('Data:',data)
         
         var list = data
-        for(let i=0; i< list.length; i++){
+        for(let i in list){
+            try {
+                document.getElementById(`task-wrapper-${i}`).remove()
+            } catch (error) {
+
+            }
+
+
             var title = `<span class='title'>${list[i].title}</span>`
 
             if (list[i].complete == true){
@@ -41,7 +49,7 @@ function BuildList(){
 
             // console.log(i);
             var item = `
-                <div id="list-wrapper" class="container bg-light p-0 m-0">
+                <div id="task-wrapper-${i}" class="container bg-light p-0 m-0">
                     <div class="d-flex justify-content-between border-bottom px-3 py-2">
                         <div class="pt-2">
                             ${title}
@@ -56,7 +64,15 @@ function BuildList(){
             wrapper.innerHTML += item
         }
 
-        for(let i=0; i< list.length; i++){
+        if (list_snapshot.length > list.length){
+            for(let i=list.length; i< list_snapshot.length; i++){
+                document.getElementById(`task-wrapper-${i}`).remove()
+            }
+        }
+        
+        list_snapshot = list
+
+        for(let i in list){
             var editBtn = document.getElementsByClassName('edit')[i]
             var deleteBtn = document.getElementsByClassName('delete')[i]
             var title = document.getElementsByClassName('title')[i]
@@ -145,6 +161,6 @@ function strokeUnstroke(item){
     })
     .then(data => {
         BuildList()
-        location.reload()
+        // location.reload()
     })
 }
