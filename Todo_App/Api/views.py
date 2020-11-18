@@ -22,3 +22,10 @@ def TaskList(request):
     posts = Task.objects.all()
     serializer = TaskSerializer(posts, many=True)
     return Response(serializer.data)
+
+@api_view(['GET'])
+def TaskDetail(request, pk):
+    post = Task.objects.get(id=pk)
+    serializer = TaskSerializer(post)
+    return Response(serializer.data)
+
